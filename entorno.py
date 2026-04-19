@@ -222,20 +222,20 @@ class GridWorld:
         }
 
         # Colores
-        C_LIBRE  = '#16213e'
-        C_PARED  = '#0f3460'
-        C_INICIO = '#e94560'
-        C_META   = '#53d769'
-        C_AGENTE = '#f5c542'
-        C_HUELLA = '#533483'
-        C_BORDE  = '#1a1a2e'
+        C_LIBRE  = '#F0F4F7'
+        C_PARED  = '#B8C1EC'
+        C_INICIO = '#FFADAD'
+        C_META   = '#CAFFBF'
+        C_AGENTE = '#FDFFB6'
+        C_HUELLA = '#D4A5FF'
+        C_BORDE  = "#020202"
 
         # Configurar figura
-        fig, ax = plt.subplots(1, 1, figsize=(8, 8), facecolor='#1a1a2e')
+        fig, ax = plt.subplots(1, 1, figsize=(8, 8), facecolor='#B8C1EC')
         ax.set_facecolor('#1a1a2e')
         fig.suptitle(
             f'  {agente.nombre}',
-            fontsize=14, fontweight='bold', color='#e0e0e0', y=0.96
+            fontsize=14, fontweight='bold', color="#0A0808", y=0.96
         )
 
         # Header en consola
@@ -318,10 +318,10 @@ class GridWorld:
             # Etiquetas A y B
             sr, sc = self.inicio
             ax.text(sc, sr, 'A', ha='center', va='center',
-                    fontsize=12, color='white', fontweight='bold')
+                    fontsize=12, color='black', fontweight='bold')
             mr, mc = self.meta
             ax.text(mc, mr, 'B', ha='center', va='center',
-                    fontsize=12, color='white', fontweight='bold')
+                    fontsize=12, color='black', fontweight='bold')
 
             # Agente
             pr, pc = estado['pos']
@@ -331,13 +331,13 @@ class GridWorld:
             # Info
             if estado['llego']:
                 texto = f"✓ ¡LLEGÓ!   |   Paso {estado['paso']}   |   Posición: {estado['pos']}"
-                color_txt = C_META
+                color_txt = C_BORDE
             elif estado['terminado']:
                 texto = f"✗ No llegó   |   Paso {estado['paso']}   |   Posición: {estado['pos']}"
                 color_txt = C_INICIO
             else:
                 texto = f"Paso {estado['paso']}   |   Posición: {estado['pos']}"
-                color_txt = '#aaaaaa'
+                color_txt = "#000000"
 
             ax.text(0.5, -0.04, texto, transform=ax.transAxes,
                     ha='center', fontsize=11, color=color_txt,
