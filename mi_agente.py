@@ -42,47 +42,50 @@ class MiAgente(Agente):
     def __init__(self):
         super().__init__(nombre="Mi Agente")
         self.visitados = set()   # Posiciones donde ya estuvimos
-        self.ultima_pos = None  # Última posición conocida
 
     def al_iniciar(self):
         self.visitados.clear()
-        self.ultima_pos = None
 
     def decidir(self, percepcion):
         pos_actual = percepcion['posicion']
         self.visitados.add(pos_actual)
 
-        direcciones_meta = list(percepcion.get('direccion_meta', []))
-
-        """
-        Decide la siguiente acción del agente.
+        #Directamente hacia la meta
+        for d in self.ACCIONES:
+            if percepcion.get(d) == 'meta':
+                return d
         
-        Parámetros:
-            percepcion – diccionario con lo que el agente puede ver
-
-        Retorna:
-            'arriba', 'abajo', 'izquierda' o 'derecha'
-        """
-        # ╔══════════════════════════════════════╗
-        # ║   ESCRIBE TU LÓGICA AQUÍ             ║
-        # ╚══════════════════════════════════════╝
-
-        # Ejemplo básico (bórralo y escribe tu propia lógica):
-        #
-        # vert, horiz = percepcion['direccion_meta']
-        #
-        # if percepcion[vert] == 'libre' or percepcion[vert] == 'meta':
-        #     return vert
-        # if percepcion[horiz] == 'libre' or percepcion[horiz] == 'meta':
-        #     return horiz
-        #
-        # return 'abajo'
-        print('Hola decidir')
-        for direccion in self.ACCIONES:
-            celda = percepcion[direccion]
-            if celda == 'meta':
-                return direccion
-            if celda == 'libre':
-                return direccion
-
-        return 'abajo'  # ← Reemplazar con tu lógica
+        #No visitados
+        direccion_meta = percepcion.get('direccion_meta', ())
+        movimientos_meta = []
+        
+        for d in self.ACCIONES:
+            if percepcion.get(d) == 'libre':
+                sig = self._sig(pos_actual, d)
+                # Prioriza: hacia meta + no visitado
+                es_hacia_meta = d in direccion_meta
+                if es_hacia_meta and sig not in self.visitados:
+                    movimientos_meta.append((2, d))
+                elif es_hacia_meta:
+                    movimientos_meta.append((1, d))
+                elif sig not in self.visitados:
+                    movimientos_meta.append((0, d))
+                else:
+                    movimientos_meta.append((-1, d))
+        
+        if movimientos_meta:
+            movimientos_meta.sort(reverse=True)
+            return movimientos_meta[0][1]
+        
+        for d in self.ACCIONES:
+            if percepcion.get(d) == 'libre':
+                return d
+        
+        return self.ACCIONES[0]
+            
+            
+    def _sig(self, pos, d):
+        f, c = pos
+        return {'arriba':(f-1,c),'abajo':(f+1,c),
+                'izquierda':(f,c-1),'derecha':(f,c+1)}[d]
+    
