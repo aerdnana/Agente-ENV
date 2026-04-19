@@ -38,26 +38,22 @@ from entorno import Agente
 
 
 class MiAgente(Agente):
-    """
-    Tu agente de navegación.
-
-    Implementa el método decidir() para que el agente
-    llegue del punto A al punto B en el grid.
-    """
 
     def __init__(self):
         super().__init__(nombre="Mi Agente")
-        # Puedes agregar atributos aquí si los necesitas.
-        # Ejemplo:
-        #   self.pasos = 0
-        #   self.memoria = {}
+        self.visitados = set()   # Posiciones donde ya estuvimos
+        self.ultima_pos = None  # Última posición conocida
 
     def al_iniciar(self):
-        """Se llama una vez al iniciar la simulación. Opcional."""
-        pass
+        self.visitados.clear()
+        self.ultima_pos = None
 
     def decidir(self, percepcion):
-        
+        pos_actual = percepcion['posicion']
+        self.visitados.add(pos_actual)
+
+        direcciones_meta = list(percepcion.get('direccion_meta', []))
+
         """
         Decide la siguiente acción del agente.
         
